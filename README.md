@@ -39,6 +39,28 @@ name or subpath with no configuration.
 If you prefer not to use Actions: run `npm run build`, then push the `dist/`
 folder (for example to a `gh-pages` branch) and point Pages at it. Same result.
 
+## Languages
+
+The quiz is available in 7 languages, each at its own URL (so search engines
+can rank them separately, linked with hreflang alternates):
+
+| Language | URL |
+|---|---|
+| English | `/is-this-cheating/` |
+| Bahasa Indonesia | `/is-this-cheating/id/` |
+| 日本語 (original wording) | `/is-this-cheating/ja/` |
+| Español | `/is-this-cheating/es/` |
+| Português do Brasil | `/is-this-cheating/pt-br/` |
+| 中文 (简体) | `/is-this-cheating/zh/` |
+| Nederlands | `/is-this-cheating/nl/` |
+
+A switcher in the footer links between them; quiz answers carry over when you
+switch. The Japanese page reuses the original 40 questions verbatim from the
+source sheet. PDFs are localized for the Latin-script languages; the Japanese
+and Chinese pages currently produce the English PDF (core PDF fonts cannot
+render CJK glyphs). Translations are fan-made drafts in `src/i18n/` — one file
+per language, corrections welcome via pull request.
+
 ## Security notes
 
 - Fully static: no backend, no accounts, no cookies, no analytics. Quiz answers

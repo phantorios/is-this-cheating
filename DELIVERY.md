@@ -69,3 +69,15 @@ Two real defects were found during verification and fixed before delivery:
 
 One known limitation, accepted: the score pill caption "about 5 minutes" is an
 estimate; jsPDF's lazy chunk (~140KB gzip) loads on first PDF download.
+
+## i18n addendum (2026-11-06, second delivery)
+
+- Hard Gate re-checked for the new surfaces: per-language titles/meta are real
+  translations (no placeholders), CJK renders via system fonts (screenshots of
+  the ja and zh pages are clean), localized PDFs byte-verified via a Node
+  harness (scripts/pdf-preview.ts) for en/id/es/pt-br/nl with accents intact
+  (Guardián, Puntuación, Concluído, Página).
+- Verified: switcher round-trip /ja/ -> /id/ (answers survive the switch),
+  full Indonesian flow to results (Si Penjaga Tembok Besi, 30/1/9 = 61).
+- Translations for id/es/pt-br/zh/nl are drafts pending owner review; ja
+  reproduces the original sheet text verbatim.

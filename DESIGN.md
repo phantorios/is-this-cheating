@@ -67,3 +67,12 @@ all of it to zero.
 - No dark-pattern hurry, no fake "X people took this" counters: honesty over hype (R-17/R-18).
 - Icons (lucide) only for navigation and states, never decorative rows (R-04).
 - One accent (primary pink) carries the whole identity; amber/emerald are states (R-29).
+- Languages live on sub-paths (one static index.html per language) instead of a
+  client-side dropdown: each language earns its own search-result URL, and the
+  switcher stays plain links that work without JS (owner's SEO priority).
+- Japanese page shows the original questions verbatim, not a translation of the
+  English: the original text is the highest-quality source and the site's heritage.
+- CJK (ja/zh) uses system fonts for Japanese/Chinese glyphs: self-hosting a JP
+  webfont costs megabytes for exactly one page; system CJK fonts render cleanly.
+- ja/zh PDFs stay English: jsPDF core fonts cannot render CJK; embedding a CJK
+  font is megabytes for one artifact (revisit if asked).

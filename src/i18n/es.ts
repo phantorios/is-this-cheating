@@ -31,6 +31,8 @@ export const es: Dictionary = {
     atAGlance: 'Tus respuestas de un vistazo',
     review: 'Revisa tus respuestas',
     downloadPdf: 'Descargar resultados en PDF',
+    downloadJpg: 'Descargar como JPG',
+    jpgError: 'No se pudo generar el JPG. Inténtalo de nuevo.',
     preparingPdf: 'Preparando PDF…',
     shareOnX: 'Compartir en X',
     backToAnswers: 'Volver a mis respuestas',

@@ -33,6 +33,8 @@ export const zh: Dictionary = {
     atAGlance: '回答一览',
     review: '回顾你的回答',
     downloadPdf: '将结果下载为 PDF',
+    downloadJpg: '下载为 JPG 图片',
+    jpgError: '无法生成 JPG 图片，请重试。',
     preparingPdf: '正在生成 PDF…',
     shareOnX: '分享到 X',
     backToAnswers: '回到我的回答',

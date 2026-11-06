@@ -34,6 +34,8 @@ export const ja: Dictionary = {
     atAGlance: '回答の内訳',
     review: '回答の確認',
     downloadPdf: '結果をPDFでダウンロード',
+    downloadJpg: '結果をJPGでダウンロード',
+    jpgError: 'JPGを生成できませんでした。もう一度お試しください。',
     preparingPdf: 'PDFを準備中…',
     shareOnX: 'Xでシェア',
     backToAnswers: '回答に戻る',

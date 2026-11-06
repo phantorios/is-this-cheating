@@ -31,6 +31,8 @@ export const id: Dictionary = {
     atAGlance: 'Ringkasan jawaban Anda',
     review: 'Tinjau jawaban Anda',
     downloadPdf: 'Unduh Hasil sebagai PDF',
+    downloadJpg: 'Unduh sebagai JPG',
+    jpgError: 'JPG tidak dapat dibuat. Coba lagi.',
     preparingPdf: 'Menyiapkan PDF…',
     shareOnX: 'Bagikan di X',
     backToAnswers: 'Kembali ke jawaban saya',

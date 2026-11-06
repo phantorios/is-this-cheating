@@ -31,6 +31,8 @@ export const ptBr: Dictionary = {
     atAGlance: 'Suas respostas de relance',
     review: 'Revise suas respostas',
     downloadPdf: 'Baixar resultado em PDF',
+    downloadJpg: 'Baixar como JPG',
+    jpgError: 'Não foi possível gerar o JPG. Tente novamente.',
     preparingPdf: 'Preparando PDF…',
     shareOnX: 'Compartilhar no X',
     backToAnswers: 'Voltar às minhas respostas',

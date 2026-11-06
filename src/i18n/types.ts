@@ -37,6 +37,8 @@ export interface Dictionary {
     atAGlance: string
     review: string
     downloadPdf: string
+    downloadJpg: string
+    jpgError: string
     preparingPdf: string
     shareOnX: string
     backToAnswers: string

@@ -8,6 +8,7 @@ import {
   FaceNeutral,
   FaceSlightlySmiling,
   HeartCrack,
+  ImageDown,
   LoaderCircle,
   RotateCcw,
   X,
@@ -574,6 +575,7 @@ function Results({
   const tierIndex = RESULT_TIERS.indexOf(getTier(score))
   const tier = t.tiers[tierIndex]
   const [pdfState, setPdfState] = useState<'idle' | 'working' | 'error'>('idle')
+  const [jpgError, setJpgError] = useState(false)
 
   const shareUrl = useMemo(() => {
     const text = [
@@ -599,6 +601,17 @@ function Results({
     } catch (err) {
       console.error('PDF generation failed', err)
       setPdfState('error')
+    }
+  }
+
+  async function handleDownloadJpg() {
+    setJpgError(false)
+    try {
+      const { downloadResultJpg } = await import('./shareImage')
+      await downloadResultJpg({ answers, finalAnswer, score, tier, t })
+    } catch (err) {
+      console.error('JPG generation failed', err)
+      setJpgError(true)
     }
   }
 
@@ -684,6 +697,10 @@ function Results({
         <a href={shareUrl} target="_blank" rel="noopener noreferrer" className={btnSecondary}>
           {t.ui.shareOnX}
         </a>
+        <button onClick={handleDownloadJpg} className={btnSecondary}>
+          <ImageDown className="h-4 w-4" aria-hidden="true" />
+          {t.ui.downloadJpg}
+        </button>
         <button onClick={onBackToQuiz} className={btnSecondary}>
           {t.ui.backToAnswers}
         </button>
@@ -695,6 +712,11 @@ function Results({
       {pdfState === 'error' && (
         <p role="alert" className="text-sm font-bold text-primary-deep">
           {t.ui.pdfError}
+        </p>
+      )}
+      {jpgError && (
+        <p role="alert" className="text-sm font-bold text-primary-deep">
+          {t.ui.jpgError}
         </p>
       )}
     </main>

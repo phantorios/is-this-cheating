@@ -31,6 +31,8 @@ export const nl: Dictionary = {
     atAGlance: 'Jouw antwoorden in één oogopslag',
     review: 'Bekijk je antwoorden',
     downloadPdf: 'Uitslag downloaden als PDF',
+    downloadJpg: 'Downloaden als JPG',
+    jpgError: 'De JPG kon niet worden gemaakt. Probeer het opnieuw.',
     preparingPdf: 'PDF voorbereiden…',
     shareOnX: 'Delen op X',
     backToAnswers: 'Terug naar mijn antwoorden',

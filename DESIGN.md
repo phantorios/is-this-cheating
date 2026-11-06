@@ -76,3 +76,8 @@ all of it to zero.
   webfont costs megabytes for exactly one page; system CJK fonts render cleanly.
 - ja/zh PDFs stay English: jsPDF core fonts cannot render CJK; embedding a CJK
   font is megabytes for one artifact (revisit if asked).
+- Question perspective convention (fixed after owner review): every question
+  describes an action by YOUR PARTNER (third person), matching the sheet's
+  premise and making the final perspective-flip question ("if you were the one
+  doing these things...") coherent. Japanese stays verbatim: the original text
+  leaves the subject implicit and already reads as the partner.

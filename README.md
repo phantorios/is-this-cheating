@@ -3,8 +3,8 @@
 Unofficial English version of the Japanese "これって浮気？判定シート" (Is this
 cheating? judgment sheet) quiz: 40 everyday situations, three answers each
 (Cheating / Not cheating, but uncomfortable / Completely OK), a score out of 80,
-and one of four result types. Results are downloadable as a PDF generated
-entirely in the browser.
+and one of four result types. Results are downloadable as a PDF or a shareable
+JPG image (1200×1200), both generated entirely in the browser.
 
 Original judgment sheet by Sukoya Kana
 ([@sukosuko_sukoya](https://x.com/sukosuko_sukoya)), sheet design by Aria

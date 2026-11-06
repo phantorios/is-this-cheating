@@ -3,19 +3,21 @@ import autoTable, { type CellHookData } from 'jspdf-autotable'
 import {
   ANSWER_OPTIONS,
   ATTRIBUTION,
-  FINAL_QUESTION,
   MAX_SCORE,
   ORIGINAL_SITE_URL,
   QUESTIONS,
-  computeScore,
   type Answers,
   type AnswerId,
   type FinalAnswer,
-  type ResultTier,
 } from './data'
+import { en } from './i18n/en'
+import { fmt } from './i18n'
+import type { Dictionary } from './i18n/types'
 
 // Core PDF fonts are WinAnsi-encoded, so every string drawn here must stay
-// ASCII (no arrows, no Japanese). JP text lives on the website, not in the PDF.
+// Latin-representable. Languages whose dictionary has no `pdf` section
+// (currently ja and zh, CJK scripts) fall back to the English labels; their
+// date is rendered with the en-US locale for the same reason.
 
 const PINK: [number, number, number] = [217, 48, 141]
 const PINK_DEEP: [number, number, number] = [176, 35, 111]
@@ -37,18 +39,13 @@ const BAR_FILL: Record<AnswerId, [number, number, number]> = {
   ok: [16, 185, 129],
 }
 
-const OPTION_BY_ID = Object.fromEntries(ANSWER_OPTIONS.map((o) => [o.id, o]))
-
 export interface PdfInput {
   answers: Answers
   finalAnswer: FinalAnswer
   score: number
-  tier: ResultTier
+  tier: { name: string; description: string }
   counts: Record<AnswerId, number>
-}
-
-function completionDate(): string {
-  return new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+  t: Dictionary
 }
 
 export async function generateResultsPdf(input: PdfInput): Promise<void> {
@@ -56,8 +53,22 @@ export async function generateResultsPdf(input: PdfInput): Promise<void> {
   // generation work starts.
   await new Promise((resolve) => setTimeout(resolve, 50))
 
-  const { answers, finalAnswer, tier } = input
-  const score = input.score || computeScore(answers)
+  const doc = buildResultsPdf(input)
+  doc.save(`is-this-cheating-results-${new Date().toISOString().slice(0, 10)}.pdf`)
+}
+
+/** Renders the complete PDF and returns the document (unit/Node-testable). */
+export function buildResultsPdf(input: PdfInput): jsPDF {
+  const { answers, finalAnswer, score, tier, counts, t } = input
+  // CJK dictionaries omit `pdf`: fall back to English labels and date locale.
+  const p = t.pdf ?? en.pdf!
+  const dateLocale = t.pdf ? t.dateLocale : 'en-US'
+  const dateStr = new Date().toLocaleDateString(dateLocale, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+
   const doc = new jsPDF({ unit: 'mm', format: 'a4' })
   const pageWidth = 210
   const left = 18
@@ -71,26 +82,26 @@ export async function generateResultsPdf(input: PdfInput): Promise<void> {
   doc.setTextColor(255, 255, 255)
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(22)
-  doc.text('Is This Cheating?', left, 14)
+  doc.text(t.ui.siteTitle, left, 14)
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(10)
-  doc.text('The 40-question judgment sheet: where do you draw the line?', left, 23)
+  doc.text(p.subtitle, left, 23)
   doc.setFontSize(9)
-  doc.text(completionDate(), right, 14, { align: 'right' })
+  doc.text(fmt(p.completed, { date: dateStr }), right, 14, { align: 'right' })
 
   doc.setFillColor(...PINK_SOFT)
   doc.roundedRect(left, 42, contentWidth, 48, 4, 4, 'F')
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(8)
   doc.setTextColor(...PINK_DEEP)
-  doc.text('YOUR RESULT', left + 8, 51)
+  doc.text(p.yourResult, left + 8, 51)
   doc.setFontSize(16)
   doc.setTextColor(...INK)
   doc.text(tier.name, left + 8, 61)
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(9)
   doc.setTextColor(...INK_SOFT)
-  doc.text(`Score: ${score} / ${MAX_SCORE}`, right - 8, 51, { align: 'right' })
+  doc.text(fmt(p.score, { score, max: MAX_SCORE }), right - 8, 51, { align: 'right' })
   doc.setFontSize(9.5)
   doc.setTextColor(...INK)
   const descriptionLines = doc.splitTextToSize(tier.description, contentWidth - 16)
@@ -100,15 +111,16 @@ export async function generateResultsPdf(input: PdfInput): Promise<void> {
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(12)
   doc.setTextColor(...INK)
-  doc.text('Your answers at a glance', left, y)
+  doc.text(p.atAGlance, left, y)
   y += 8
 
   for (const opt of ANSWER_OPTIONS) {
-    const count = input.counts[opt.id]
+    const count = counts[opt.id]
+    const label = t.answerOptions.find((o) => o.id === opt.id)!.label
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(9.5)
     doc.setTextColor(...INK)
-    doc.text(OPTION_BY_ID[opt.id].label, left, y)
+    doc.text(label, left, y)
     doc.text(`${count} / ${QUESTIONS.length}`, right, y, { align: 'right' })
     doc.setFillColor(...TRACK)
     doc.roundedRect(left, y + 1.5, contentWidth, 4, 2, 2, 'F')
@@ -124,12 +136,16 @@ export async function generateResultsPdf(input: PdfInput): Promise<void> {
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(12)
   doc.setTextColor(...INK)
-  const finalLines = doc.splitTextToSize(FINAL_QUESTION, contentWidth)
+  const finalLines = doc.splitTextToSize(t.finalQuestion, contentWidth)
   doc.text(finalLines, left, y)
   y += finalLines.length * 5 + 2
   doc.setFontSize(11)
   doc.setTextColor(...PINK_DEEP)
-  doc.text(`Your answer: ${finalAnswer === 'yes' ? 'Yes' : 'No'}`, left, y)
+  doc.text(
+    fmt(p.yourAnswer, { answer: finalAnswer === 'yes' ? t.yesNo.yes : t.yesNo.no }),
+    left,
+    y,
+  )
   y += 10
 
   doc.setFont('helvetica', 'normal')
@@ -144,8 +160,12 @@ export async function generateResultsPdf(input: PdfInput): Promise<void> {
   doc.addPage()
   autoTable(doc, {
     startY: 30,
-    head: [['#', 'Question', 'My answer']],
-    body: QUESTIONS.map((q) => [String(q.id), q.text, OPTION_BY_ID[answers[q.id]].label]),
+    head: [['#', p.colQuestion, p.colAnswer]],
+    body: QUESTIONS.map((q) => [
+      String(q.id),
+      t.questions[q.id - 1],
+      t.answerOptions.find((o) => o.id === answers[q.id])!.label,
+    ]),
     theme: 'grid',
     styles: {
       font: 'helvetica',
@@ -183,11 +203,11 @@ export async function generateResultsPdf(input: PdfInput): Promise<void> {
       doc.setFont('helvetica', 'bold')
       doc.setFontSize(11)
       doc.setTextColor(...PINK_DEEP)
-      doc.text('Your 40 answers', left, 14)
+      doc.text(p.your40, left, 14)
       doc.setFont('helvetica', 'normal')
       doc.setFontSize(8)
       doc.setTextColor(...INK_SOFT)
-      doc.text(`Completed ${completionDate()}`, right, 14, { align: 'right' })
+      doc.text(fmt(p.completed, { date: dateStr }), right, 14, { align: 'right' })
     },
   })
 
@@ -197,9 +217,9 @@ export async function generateResultsPdf(input: PdfInput): Promise<void> {
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(7.5)
     doc.setTextColor(...INK_SOFT)
-    doc.text('Is This Cheating? · Unofficial English fan version', left, 291)
-    doc.text(`Page ${i} of ${total}`, right, 291, { align: 'right' })
+    doc.text(p.footer, left, 291)
+    doc.text(fmt(p.pageOf, { page: i, pages: total }), right, 291, { align: 'right' })
   }
 
-  doc.save(`is-this-cheating-results-${new Date().toISOString().slice(0, 10)}.pdf`)
+  return doc
 }

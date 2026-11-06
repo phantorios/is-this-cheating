@@ -13,21 +13,20 @@ import {
   X,
 } from 'lucide-react'
 import {
-  ANSWER_OPTIONS,
-  FINAL_QUESTION,
   MAX_SCORE,
   ORIGINAL_SITE_URL,
   QUESTIONS,
   QUESTIONS_PER_PAGE,
+  RESULT_TIERS,
   computeScore,
   countAnswers,
   getTier,
   type AnswerId,
   type Answers,
   type FinalAnswer,
-  type Question,
-  type ResultTier,
 } from './data'
+import { LANGS, currentLang, fmt, getDict, relLink, type Dictionary } from './i18n'
+import type { LangCode } from './i18n/types'
 
 type Screen = 'intro' | 'quiz' | 'final' | 'results'
 
@@ -72,7 +71,9 @@ function siteUrl(): string {
   return `${window.location.origin}${window.location.pathname}`
 }
 
-const OPTION_BY_ID = Object.fromEntries(ANSWER_OPTIONS.map((o) => [o.id, o]))
+function optionLabel(t: Dictionary, id: AnswerId): string {
+  return t.answerOptions.find((o) => o.id === id)!.label
+}
 
 // ---------------------------------------------------------------------------
 // Shared styling (tokens live in index.css / DESIGN.md)
@@ -142,26 +143,26 @@ function PaperSheet({ children, className = '' }: { children: ReactNode; classNa
 }
 
 function AnswerChips({
+  t,
   groupName,
   labelledBy,
   value,
   onChange,
-  options,
 }: {
+  t: Dictionary
   groupName: string
   labelledBy: string
-  value: string | null
-  onChange: (id: string) => void
-  options: { id: string; label: string }[]
+  value: AnswerId | null
+  onChange: (id: AnswerId) => void
 }) {
   return (
     <div role="radiogroup" aria-labelledby={labelledBy} className="grid gap-2 sm:grid-cols-3">
-      {options.map((opt) => {
+      {t.answerOptions.map((opt) => {
         const selected = value === opt.id
         return (
           <label
             key={opt.id}
-            className={`${chipClasses(selected, opt.id as AnswerId)} has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-primary-deep`}
+            className={`${chipClasses(selected, opt.id)} has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-primary-deep`}
           >
             <input
               type="radio"
@@ -180,12 +181,14 @@ function AnswerChips({
 }
 
 function QuestionRow({
+  t,
   q,
   number,
   value,
   onChange,
 }: {
-  q: Question
+  t: Dictionary
+  q: { id: number }
   number: number
   value: AnswerId | undefined
   onChange: (a: AnswerId) => void
@@ -201,16 +204,16 @@ function QuestionRow({
           {number}
         </span>
         <h3 id={headingId} className="text-base font-medium leading-snug">
-          {q.text}
+          {t.questions[q.id - 1]}
         </h3>
       </div>
       <div className="mt-3 sm:pl-10">
         <AnswerChips
+          t={t}
           groupName={`q-${q.id}`}
           labelledBy={headingId}
           value={value ?? null}
-          onChange={(id) => onChange(id as AnswerId)}
-          options={ANSWER_OPTIONS}
+          onChange={onChange}
         />
       </div>
     </div>
@@ -218,9 +221,11 @@ function QuestionRow({
 }
 
 function ProgressHeader({
+  t,
   answeredCount,
   onOpenOverview,
 }: {
+  t: Dictionary
   answeredCount: number
   onOpenOverview: () => void
 }) {
@@ -229,14 +234,14 @@ function ProgressHeader({
     <div className="sticky top-0 z-20 -mx-4 bg-paper/95 px-4 py-3 backdrop-blur-sm sm:-mx-6 sm:px-6">
       <div className="flex items-center justify-between gap-3">
         <p aria-live="polite" className="font-numeric text-sm font-bold text-ink">
-          {answeredCount} / {QUESTIONS.length} answered
+          {fmt(t.ui.answeredCount, { answered: answeredCount, total: QUESTIONS.length })}
         </p>
         <button
           onClick={onOpenOverview}
           className="inline-flex min-h-9 cursor-pointer items-center gap-1.5 rounded-full border-2 border-primary-soft bg-white px-3 text-xs font-bold text-primary-deep transition-colors hover:border-primary"
         >
           <ClipboardList className="h-4 w-4" aria-hidden="true" />
-          Overview
+          {t.ui.overview}
         </button>
       </div>
       <div
@@ -245,7 +250,7 @@ function ProgressHeader({
         aria-valuenow={answeredCount}
         aria-valuemin={0}
         aria-valuemax={QUESTIONS.length}
-        aria-label="Quiz progress"
+        aria-label={t.ui.overview}
       >
         <div
           className="h-full rounded-full bg-primary transition-all duration-200"
@@ -257,10 +262,12 @@ function ProgressHeader({
 }
 
 function OverviewModal({
+  t,
   answers,
   onJump,
   onClose,
 }: {
+  t: Dictionary
   answers: Answers
   onJump: (page: number) => void
   onClose: () => void
@@ -286,25 +293,22 @@ function OverviewModal({
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Question overview"
+        aria-label={t.ui.overview}
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
         className="max-h-[80dvh] w-full max-w-md overflow-y-auto rounded-card bg-white p-5 shadow-xl outline-none"
       >
         <div className="flex items-center justify-between gap-3">
-          <h2 className="font-display text-lg text-primary-deep">Question overview</h2>
+          <h2 className="font-display text-lg text-primary-deep">{t.ui.overview}</h2>
           <button
             onClick={onClose}
-            aria-label="Close overview"
+            aria-label={t.ui.closeOverview}
             className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-ink-soft transition-colors hover:bg-primary-soft hover:text-primary-deep"
           >
             <X className="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
-        <p className="mt-1 text-xs leading-relaxed text-ink-soft">
-          Colored numbers are answered, dashed ones are not. The ringed number is your first
-          unanswered question.
-        </p>
+        <p className="mt-1 text-xs leading-relaxed text-ink-soft">{t.ui.overviewHint}</p>
         <div className="mt-4 grid grid-cols-5 gap-2 sm:grid-cols-8">
           {QUESTIONS.map((q) => {
             const a = answers[q.id]
@@ -313,7 +317,7 @@ function OverviewModal({
               <button
                 key={q.id}
                 onClick={() => onJump(Math.floor((q.id - 1) / QUESTIONS_PER_PAGE))}
-                aria-label={`Question ${q.id}${a ? `, answered: ${OPTION_BY_ID[a].label}` : ', not answered yet'}`}
+                aria-label={`${q.id}${a ? `: ${optionLabel(t, a)}` : ''}`}
                 className={`flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border-2 font-numeric text-sm font-bold transition-colors ${
                   a
                     ? OVERVIEW_CHIP_SELECTED[a]
@@ -326,18 +330,17 @@ function OverviewModal({
           })}
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-soft">
-          <span className="flex items-center gap-1.5">
-            <span aria-hidden="true" className="h-3 w-3 rounded-full bg-primary-deep" />
-            Cheating
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span aria-hidden="true" className="h-3 w-3 rounded-full bg-amber-400" />
-            Uncomfortable
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span aria-hidden="true" className="h-3 w-3 rounded-full bg-emerald-400" />
-            Completely OK
-          </span>
+          {t.answerOptions.map((opt, i) => (
+            <span key={opt.id} className="flex items-center gap-1.5">
+              <span
+                aria-hidden="true"
+                className={`h-3 w-3 rounded-full ${
+                  ['bg-primary-deep', 'bg-amber-400', 'bg-emerald-400'][i]
+                }`}
+              />
+              {opt.label}
+            </span>
+          ))}
         </div>
       </div>
     </div>
@@ -348,47 +351,37 @@ function OverviewModal({
 // Screens
 // ---------------------------------------------------------------------------
 
-function Intro({ onStart, hasSaved }: { onStart: () => void; hasSaved: boolean }) {
+function Intro({ t, onStart, hasSaved }: { t: Dictionary; onStart: () => void; hasSaved: boolean }) {
   return (
     <main className="flex flex-1 flex-col justify-center gap-6 pt-6 sm:pt-10">
       <PaperSheet className="text-center">
-        <p className="text-sm font-bold text-ink-soft">これって浮気？判定シート</p>
+        <p className="text-sm font-bold text-ink-soft">{t.ui.originLine}</p>
         <h1 className="mt-2 font-display text-4xl leading-tight text-primary-deep sm:text-5xl">
-          Is This Cheating?
+          {t.ui.siteTitle}
         </h1>
-        <p className="mx-auto mt-4 max-w-md text-base leading-relaxed">
-          40 everyday situations between your partner and other people. For each one, decide what
-          it means to you. There are no right answers: answer honestly, just for yourself.
-        </p>
+        <p className="mx-auto mt-4 max-w-md text-base leading-relaxed">{t.ui.introText}</p>
         <div className="mx-auto mt-6 flex max-w-sm flex-col items-stretch gap-2" aria-hidden="true">
-          <span className="rounded-full border-2 border-primary-deep bg-primary-deep px-4 py-2 text-sm font-bold text-white">
-            Cheating
-          </span>
-          <span className="rounded-full border-2 border-amber-500 bg-amber-100 px-4 py-2 text-sm font-bold text-amber-900">
-            Not cheating, but uncomfortable
-          </span>
-          <span className="rounded-full border-2 border-emerald-600 bg-emerald-100 px-4 py-2 text-sm font-bold text-emerald-900">
-            Completely OK
-          </span>
+          {t.answerOptions.map((opt) => (
+            <span key={opt.id} className={chipClasses(true, opt.id)}>
+              {opt.label}
+            </span>
+          ))}
         </div>
         <button
           onClick={onStart}
           className={`${btnPrimary} mt-8 min-h-12 w-full px-8 text-base sm:w-auto`}
         >
-          {hasSaved ? 'Continue the quiz' : 'Start the quiz'}
+          {hasSaved ? t.ui.continueQuiz : t.ui.start}
         </button>
-        {hasSaved && (
-          <p className="mt-2 text-xs text-ink-soft">Your previous answers are still here.</p>
-        )}
-        <p className="mt-6 font-numeric text-xs text-ink-soft">
-          40 questions · about 5 minutes · result downloadable as a PDF
-        </p>
+        {hasSaved && <p className="mt-2 text-xs text-ink-soft">{t.ui.savedNote}</p>}
+        <p className="mt-6 font-numeric text-xs text-ink-soft">{t.ui.metaLine}</p>
       </PaperSheet>
     </main>
   )
 }
 
 function QuizPage({
+  t,
   page,
   answers,
   onAnswer,
@@ -396,6 +389,7 @@ function QuizPage({
   onNext,
   onBack,
 }: {
+  t: Dictionary
   page: number
   answers: Answers
   onAnswer: (qid: number, a: AnswerId) => void
@@ -406,12 +400,13 @@ function QuizPage({
   const slice = QUESTIONS.slice(page * QUESTIONS_PER_PAGE, (page + 1) * QUESTIONS_PER_PAGE)
   return (
     <main className="flex flex-1 flex-col gap-4">
-      <ProgressHeader answeredCount={Object.keys(answers).length} onOpenOverview={onOpenOverview} />
+      <ProgressHeader t={t} answeredCount={Object.keys(answers).length} onOpenOverview={onOpenOverview} />
       <PaperSheet>
         <ol className="divide-y divide-stone-100">
           {slice.map((q, i) => (
             <li key={q.id} className="py-6 first:pt-1 last:pb-1">
               <QuestionRow
+                t={t}
                 q={q}
                 number={page * QUESTIONS_PER_PAGE + i + 1}
                 value={answers[q.id]}
@@ -425,16 +420,16 @@ function QuizPage({
         {page > 0 ? (
           <button onClick={onBack} className={btnSecondary}>
             <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-            Back
+            {t.ui.back}
           </button>
         ) : (
           <span aria-hidden="true" />
         )}
         <p className="font-numeric text-sm font-bold text-ink-soft" aria-live="polite">
-          Page {page + 1} of {PAGE_COUNT}
+          {fmt(t.ui.pageOf, { page: page + 1, pages: PAGE_COUNT })}
         </p>
         <button onClick={onNext} className={btnPrimary}>
-          {page < PAGE_COUNT - 1 ? 'Next' : 'Final question'}
+          {page < PAGE_COUNT - 1 ? t.ui.next : t.ui.finalQuestionBtn}
           <ChevronRight className="h-4 w-4" aria-hidden="true" />
         </button>
       </div>
@@ -443,6 +438,7 @@ function QuizPage({
 }
 
 function FinalStep({
+  t,
   finalAnswer,
   onFinalAnswer,
   complete,
@@ -451,6 +447,7 @@ function FinalStep({
   onBack,
   onOpenOverview,
 }: {
+  t: Dictionary
   finalAnswer: FinalAnswer | null
   onFinalAnswer: (a: FinalAnswer) => void
   complete: boolean
@@ -463,15 +460,15 @@ function FinalStep({
   return (
     <main className="flex flex-1 flex-col gap-4 pt-6">
       <PaperSheet className="text-center">
-        <p className="text-sm font-bold text-ink-soft">One last thing</p>
+        <p className="text-sm font-bold text-ink-soft">{t.ui.oneLastThing}</p>
         <h2 id={headingId} className="mt-2 font-display text-2xl leading-snug sm:text-3xl">
-          {FINAL_QUESTION}
+          {t.finalQuestion}
         </h2>
         <div className="mx-auto mt-6 grid max-w-sm grid-cols-2 gap-3">
           {(
             [
-              { id: 'yes', label: 'Yes' },
-              { id: 'no', label: 'No' },
+              { id: 'yes', label: t.yesNo.yes },
+              { id: 'no', label: t.yesNo.no },
             ] as { id: FinalAnswer; label: string }[]
           ).map((opt) => {
             const selected = finalAnswer === opt.id
@@ -497,27 +494,27 @@ function FinalStep({
       <div className="flex items-center justify-between gap-3">
         <button onClick={onBack} className={btnSecondary}>
           <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-          Back to questions
+          {t.ui.backToQuestions}
         </button>
         <button onClick={onSeeResults} disabled={!complete} className={btnPrimary}>
-          See my result
+          {t.ui.seeResult}
         </button>
       </div>
       {!complete && (
         <p aria-live="polite" className="text-center text-sm text-ink-soft">
           {remaining > 0 ? (
             <>
-              You still have {remaining} question{remaining === 1 ? '' : 's'} left.{' '}
+              {fmt(t.ui.questionsLeft, { n: remaining })}{' '}
               <button
                 onClick={onOpenOverview}
                 className="cursor-pointer font-bold text-primary-deep underline decoration-primary/40 underline-offset-2 hover:text-primary"
               >
-                Open the overview
-              </button>{' '}
-              to find them.
+                {t.ui.openTheOverview}
+              </button>
+              {t.ui.remainingSuffix}
             </>
           ) : (
-            'Pick Yes or No above to see your result.'
+            t.ui.pickYesNo
           )}
         </p>
       )}
@@ -526,10 +523,12 @@ function FinalStep({
 }
 
 function DistributionRow({
+  t,
   id,
   count,
   total,
 }: {
+  t: Dictionary
   id: AnswerId
   count: number
   total: number
@@ -541,7 +540,7 @@ function DistributionRow({
       <div className="flex items-center justify-between text-sm">
         <span className="flex items-center gap-1.5 font-bold">
           <Icon className="h-4 w-4" aria-hidden="true" />
-          {OPTION_BY_ID[id].label}
+          {optionLabel(t, id)}
         </span>
         <span className="font-numeric font-bold">
           {count} / {total}
@@ -558,11 +557,13 @@ function DistributionRow({
 }
 
 function Results({
+  t,
   answers,
   finalAnswer,
   onRestart,
   onBackToQuiz,
 }: {
+  t: Dictionary
   answers: Answers
   finalAnswer: FinalAnswer
   onRestart: () => void
@@ -570,20 +571,21 @@ function Results({
 }) {
   const counts = useMemo(() => countAnswers(answers), [answers])
   const score = useMemo(() => computeScore(answers), [answers])
-  const tier: ResultTier = getTier(score)
+  const tierIndex = RESULT_TIERS.indexOf(getTier(score))
+  const tier = t.tiers[tierIndex]
   const [pdfState, setPdfState] = useState<'idle' | 'working' | 'error'>('idle')
 
   const shareUrl = useMemo(() => {
     const text = [
-      'Is This Cheating? Result',
-      `【${tier.name}】 Score: ${score}/${MAX_SCORE}`,
-      `If I were the one doing it, would my answers change? → ${finalAnswer === 'yes' ? 'Yes' : 'No'}`,
+      t.share.title,
+      fmt(t.share.scoreLine, { tier: tier.name, score, max: MAX_SCORE }),
+      fmt(t.share.changeLine, { answer: finalAnswer === 'yes' ? t.yesNo.yes : t.yesNo.no }),
       'Original sheet by Sukoya Kana (@sukosuko_sukoya)',
       '#IsThisCheating',
       siteUrl(),
     ].join('\n')
     return `https://x.com/intent/tweet?${new URLSearchParams({ text }).toString()}`
-  }, [tier, score, finalAnswer])
+  }, [t, tier, score, finalAnswer])
 
   async function handleDownloadPdf() {
     if (pdfState === 'working') return
@@ -592,7 +594,7 @@ function Results({
       // Lazy-loaded: jsPDF (and its html2canvas/dompurify baggage) only
       // downloads when the user actually asks for a PDF.
       const { generateResultsPdf } = await import('./pdf')
-      await generateResultsPdf({ answers, finalAnswer, score, tier, counts })
+      await generateResultsPdf({ answers, finalAnswer, score, tier, counts, t })
       setPdfState('idle')
     } catch (err) {
       console.error('PDF generation failed', err)
@@ -603,29 +605,40 @@ function Results({
   return (
     <main className="flex flex-1 flex-col gap-4 pt-6">
       <PaperSheet className="text-center">
-        <p className="text-sm font-bold text-ink-soft">Your result</p>
-        <p className="mt-2 text-sm text-ink-soft">{tier.jp}</p>
-        <h2 className="mt-1 font-display text-3xl leading-tight text-primary-deep sm:text-4xl">
+        <p className="text-sm font-bold text-ink-soft">{t.ui.yourResult}</p>
+        {t.code !== 'ja' && (
+          <p className="mt-2 text-sm text-ink-soft">{RESULT_TIERS[tierIndex].jp}</p>
+        )}
+        <h2 className="mt-2 font-display text-3xl leading-tight text-primary-deep sm:text-4xl">
           {tier.name}
         </h2>
         <p className="mx-auto mt-3 max-w-md leading-relaxed">{tier.description}</p>
-        <p className="mt-5 font-numeric text-sm text-ink-soft">Score</p>
-        <p className="font-numeric text-4xl font-bold" aria-label={`Score ${score} out of ${MAX_SCORE}`}>
+        <p className="mt-5 font-numeric text-sm text-ink-soft">{t.ui.score}</p>
+        <p
+          className="font-numeric text-4xl font-bold"
+          aria-label={fmt(t.ui.scoreAria, { n: score, max: MAX_SCORE })}
+        >
           {score} <span className="text-xl font-bold text-ink-soft">/ {MAX_SCORE}</span>
         </p>
       </PaperSheet>
 
       <PaperSheet>
-        <h3 className="font-display text-lg">Your answers at a glance</h3>
+        <h3 className="font-display text-lg">{t.ui.atAGlance}</h3>
         <div className="mt-4 flex flex-col gap-4">
-          {ANSWER_OPTIONS.map((opt) => (
-            <DistributionRow key={opt.id} id={opt.id} count={counts[opt.id]} total={QUESTIONS.length} />
+          {t.answerOptions.map((opt) => (
+            <DistributionRow
+              key={opt.id}
+              t={t}
+              id={opt.id}
+              count={counts[opt.id]}
+              total={QUESTIONS.length}
+            />
           ))}
         </div>
       </PaperSheet>
 
       <PaperSheet>
-        <h3 className="font-display text-lg">Review your answers</h3>
+        <h3 className="font-display text-lg">{t.ui.review}</h3>
         <ol className="mt-2 divide-y divide-stone-100">
           {QUESTIONS.map((q) => {
             const a = answers[q.id]
@@ -638,20 +651,22 @@ function Results({
                   >
                     {q.id}
                   </span>
-                  <p className="text-sm leading-snug">{q.text}</p>
+                  <p className="text-sm leading-snug">{t.questions[q.id - 1]}</p>
                 </div>
                 <span
                   className={`shrink-0 rounded-full border px-2.5 py-1 text-xs font-bold ${ANSWER_TAG[a]}`}
                 >
-                  {OPTION_BY_ID[a].label}
+                  {optionLabel(t, a)}
                 </span>
               </li>
             )
           })}
           <li className="flex items-start justify-between gap-3 py-3">
-            <p className="text-sm font-bold leading-snug">{FINAL_QUESTION}</p>
-            <span className={`shrink-0 rounded-full border px-2.5 py-1 text-xs font-bold ${ANSWER_TAG.cheating}`}>
-              {finalAnswer === 'yes' ? 'Yes' : 'No'}
+            <p className="text-sm font-bold leading-snug">{t.finalQuestion}</p>
+            <span
+              className={`shrink-0 rounded-full border px-2.5 py-1 text-xs font-bold ${ANSWER_TAG.cheating}`}
+            >
+              {finalAnswer === 'yes' ? t.yesNo.yes : t.yesNo.no}
             </span>
           </li>
         </ol>
@@ -664,34 +679,68 @@ function Results({
           ) : (
             <Download className="h-4 w-4" aria-hidden="true" />
           )}
-          {pdfState === 'working' ? 'Preparing PDF…' : 'Download Results as PDF'}
+          {pdfState === 'working' ? t.ui.preparingPdf : t.ui.downloadPdf}
         </button>
         <a href={shareUrl} target="_blank" rel="noopener noreferrer" className={btnSecondary}>
-          Share on X
+          {t.ui.shareOnX}
         </a>
         <button onClick={onBackToQuiz} className={btnSecondary}>
-          Back to my answers
+          {t.ui.backToAnswers}
         </button>
         <button onClick={onRestart} className={btnSecondary}>
           <RotateCcw className="h-4 w-4" aria-hidden="true" />
-          Restart quiz
+          {t.ui.restart}
         </button>
       </div>
       {pdfState === 'error' && (
         <p role="alert" className="text-sm font-bold text-primary-deep">
-          The PDF could not be generated. Try again.
+          {t.ui.pdfError}
         </p>
       )}
     </main>
   )
 }
 
-function Attribution() {
+function LangSwitcher({ current, t }: { current: LangCode; t: Dictionary }) {
+  return (
+    <nav
+      aria-label={t.ui.langNavLabel}
+      className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs"
+    >
+      {LANGS.map((l, i) => (
+        <span key={l.code} className="flex items-center gap-3">
+          {i > 0 && (
+            <span aria-hidden="true" className="text-stone-300">
+              ·
+            </span>
+          )}
+          {l.code === current ? (
+            <span aria-current="true" className="font-bold text-primary-deep">
+              {l.label}
+            </span>
+          ) : (
+            <a
+              href={relLink(current, l.code)}
+              hrefLang={l.code}
+              lang={l.code}
+              className="underline decoration-primary/40 underline-offset-2 transition-colors hover:text-primary-deep"
+            >
+              {l.label}
+            </a>
+          )}
+        </span>
+      ))}
+    </nav>
+  )
+}
+
+function Attribution({ t, current }: { t: Dictionary; current: LangCode }) {
   const link =
     'underline decoration-primary/40 underline-offset-2 transition-colors hover:text-primary-deep'
   return (
     <footer className="mt-10 border-t border-primary-soft pt-4 text-center text-xs leading-relaxed text-ink-soft">
-      <p>
+      <LangSwitcher current={current} t={t} />
+      <p className="mt-4">
         Original judgment sheet by{' '}
         <a href="https://x.com/sukosuko_sukoya" target="_blank" rel="noopener noreferrer" className={link}>
           Sukoya Kana (@sukosuko_sukoya)
@@ -707,7 +756,7 @@ function Attribution() {
         .
       </p>
       <p className="mt-1">
-        Unofficial English fan version. Original (Japanese):{' '}
+        {t.ui.unofficialFanLine} {t.ui.originalSiteLabel}{' '}
         <a href={ORIGINAL_SITE_URL} target="_blank" rel="noopener noreferrer" className={link}>
           ikura1.github.io/uwaki-hantei
         </a>
@@ -719,6 +768,8 @@ function Attribution() {
 // ---------------------------------------------------------------------------
 
 export default function App() {
+  const [lang] = useState<LangCode>(currentLang)
+  const t = getDict(lang)
   const initial = useMemo(loadSaved, [])
   const [screen, setScreen] = useState<Screen>('intro')
   const [page, setPage] = useState(0)
@@ -761,7 +812,7 @@ export default function App() {
   }
 
   function restart() {
-    if (!window.confirm('Clear all answers and start over?')) return
+    if (!window.confirm(t.ui.restartConfirm)) return
     setAnswers({})
     setFinalAnswer(null)
     setPage(0)
@@ -770,9 +821,10 @@ export default function App() {
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col px-4 pb-8 sm:px-6">
-      {screen === 'intro' && <Intro onStart={startQuiz} hasSaved={answeredCount > 0} />}
+      {screen === 'intro' && <Intro t={t} onStart={startQuiz} hasSaved={answeredCount > 0} />}
       {screen === 'quiz' && (
         <QuizPage
+          t={t}
           page={page}
           answers={answers}
           onAnswer={answer}
@@ -786,6 +838,7 @@ export default function App() {
       )}
       {screen === 'final' && (
         <FinalStep
+          t={t}
           finalAnswer={finalAnswer}
           onFinalAnswer={setFinalAnswer}
           complete={complete}
@@ -800,6 +853,7 @@ export default function App() {
       )}
       {screen === 'results' && finalAnswer !== null && (
         <Results
+          t={t}
           answers={answers}
           finalAnswer={finalAnswer}
           onRestart={restart}
@@ -809,9 +863,10 @@ export default function App() {
           }}
         />
       )}
-      <Attribution />
+      <Attribution t={t} current={lang} />
       {overviewOpen && (
         <OverviewModal
+          t={t}
           answers={answers}
           onJump={(p) => {
             setPage(p)

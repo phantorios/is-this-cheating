@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://phantorios.github.io/is-this-cheating/sitemap.xml

@@ -8,6 +8,46 @@
       content="A 40-question judgment sheet about where you draw the line in a relationship. Answer honestly, get your result, and download it as a PDF."
     />
     <meta name="theme-color" content="#D9308D" />
+
+    <!-- SEO: canonical + Open Graph + Twitter card -->
+    <link rel="canonical" href="https://phantorios.github.io/is-this-cheating/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://phantorios.github.io/is-this-cheating/" />
+    <meta property="og:site_name" content="Is This Cheating?" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="Is This Cheating? The 40-question judgment sheet" />
+    <meta
+      property="og:description"
+      content="A 40-question judgment sheet about where you draw the line in a relationship. Answer honestly, get your result, and download it as a PDF."
+    />
+    <meta property="og:image" content="https://phantorios.github.io/is-this-cheating/ogp.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Is This Cheating? quiz title card with the three answer options" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Is This Cheating? The 40-question judgment sheet" />
+    <meta
+      name="twitter:description"
+      content="A 40-question judgment sheet about where you draw the line in a relationship. Answer honestly, get your result, and download it as a PDF."
+    />
+    <meta name="twitter:image" content="https://phantorios.github.io/is-this-cheating/ogp.png" />
+
+    <!-- Structured data (honest description of the app and its origin) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Is This Cheating? The 40-question judgment sheet",
+        "url": "https://phantorios.github.io/is-this-cheating/",
+        "description": "An unofficial English version of the Japanese 'Is this cheating?' judgment sheet quiz: 40 everyday relationship situations, three answers each, a score out of 80 and one of four result types.",
+        "inLanguage": "en",
+        "applicationCategory": "GameApplication",
+        "browserRequirements": "Requires JavaScript",
+        "isBasedOn": "https://ikura1.github.io/uwaki-hantei/",
+        "datePublished": "2026-11-06"
+      }
+    </script>
+
     <link
       rel="icon"
       href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='%23D9308D'%3E%3Cpath%20d='M12%2021.35l-1.45-1.32C5.4%2015.36%202%2012.28%202%208.5%202%205.42%204.42%203%207.5%203c1.74%200%203.41.81%204.5%202.09C13.09%203.81%2014.76%203%2016.5%203%2019.58%203%2022%205.42%2022%208.5c0%203.78-3.4%206.86-8.55%2011.54L12%2021.35z'/%3E%3C/svg%3E"
@@ -15,7 +55,21 @@
     <title>Is This Cheating? The 40-question judgment sheet</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Static fallback for crawlers that do not execute JavaScript -->
+      <noscript>
+        <main style="max-width: 640px; margin: 3rem auto; padding: 0 1.5rem; font-family: sans-serif; color: #333333;">
+          <h1>Is This Cheating? The 40-question judgment sheet</h1>
+          <p>
+            An unofficial English version of the Japanese "これって浮気？判定シート" quiz: 40
+            everyday situations between your partner and other people. For each one you answer
+            Cheating, Not cheating but uncomfortable, or Completely OK, and get a score out of 80
+            with one of four result types, from The Easygoing Truster to The Iron-Wall Guardian.
+          </p>
+          <p>JavaScript is required to take the interactive quiz and download your results as a PDF.</p>
+        </main>
+      </noscript>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

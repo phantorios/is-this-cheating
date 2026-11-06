@@ -1,0 +1,28 @@
+{
+  "name": "is-this-cheating",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "English version of the 40-question 'Is this cheating?' judgment sheet quiz",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.9",
+    "lucide-react": "^1.70.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.2.1",
+    "tailwindcss": "^4.3.4",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.6"
+  }
+}

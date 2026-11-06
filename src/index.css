@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+/* Self-hosted fonts (Latin subsets). Zero third-party requests. */
+@font-face {
+  font-family: "Dela Gothic One";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./assets/fonts/dela-gothic-one-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Zen Maru Gothic";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./assets/fonts/zen-maru-gothic-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Zen Maru Gothic";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./assets/fonts/zen-maru-gothic-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Zen Maru Gothic";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("./assets/fonts/zen-maru-gothic-700.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Archivo";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./assets/fonts/archivo-latin.woff2") format("woff2");
+}
+
+@theme {
+  --font-display: "Dela Gothic One", "Zen Maru Gothic", system-ui, sans-serif;
+  --font-body: "Zen Maru Gothic", system-ui, sans-serif;
+  --font-numeric: "Archivo", "Zen Maru Gothic", system-ui, sans-serif;
+
+  --color-primary: #d9308d;
+  --color-primary-deep: #b0236f;
+  --color-primary-dark: #9a1d5f;
+  --color-primary-soft: #fce7f3;
+  --color-paper: #fff9fc;
+  --color-ink: #333333;
+  --color-ink-soft: #6b5560;
+
+  --radius-card: 1.5rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* R-32: visible focus everywhere, never removed */
+:focus-visible {
+  outline: 2px solid var(--color-primary-deep);
+  outline-offset: 2px;
+}
+
+/* Keep scroll targets clear of the sticky progress header */
+input[type="radio"] {
+  scroll-margin-top: 6.5rem;
+}
+
+/* R-39: reduced-motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}

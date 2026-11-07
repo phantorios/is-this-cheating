@@ -122,6 +122,18 @@ export const en: Dictionary = {
     scoreLine: '【{tier}】 Score: {score}/{max}',
     changeLine: 'If I were the one doing it, would my answers change? → {answer}',
   },
+  easterEggs: {
+    0: '0/80: Completely OK on all 40. Zenbu OK, apparently.',
+    35: '35: Mikopi. Sakura Miko sees you.',
+    39: '39: sankyū. Thank you for playing.',
+    44: '44: shishi. The lion is watching.',
+    45: '45: Shikopi. Someone knows their fan numbers.',
+    53: '53: go-mi. A trash score. Bold choice.',
+    67: '67: roku-nana. The sheet offers no comment.',
+    69: '69: nice.',
+    77: '77: jackpot. Double lucky sevens.',
+    80: '80/80: a perfect wall. No doors, no windows.',
+  },
   pdf: {
     subtitle: 'The 40-question judgment sheet: where do you draw the line?',
     yourResult: 'YOUR RESULT',

@@ -122,6 +122,18 @@ export const es: Dictionary = {
     scoreLine: '【{tier}】 Puntuación: {score}/{max}',
     changeLine: 'Si yo fuera quien lo hace, ¿cambiarían mis respuestas? → {answer}',
   },
+  easterEggs: {
+    0: '0/80: "Totalmente bien" en las 40. Zenbu OK, al parecer.',
+    35: '35: Mikopi. Sakura Miko te está viendo.',
+    39: '39: sankyū. Gracias por jugar.',
+    44: '44: shishi. El león te está observando.',
+    45: '45: Shikopi. Alguien conoce sus números de fan.',
+    53: '53: go-mi. Una puntuación basura. Una elección valiente.',
+    67: '67: roku-nana. La hoja prefiere no comentar.',
+    69: '69: nice.',
+    77: '77: jackpot. Dos sietes de la suerte seguidos.',
+    80: '80/80: un muro perfecto. Sin puertas ni ventanas.',
+  },
   pdf: {
     subtitle: 'La hoja de 40 preguntas: ¿dónde está tu límite?',
     yourResult: 'TU RESULTADO',

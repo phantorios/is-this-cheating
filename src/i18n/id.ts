@@ -122,6 +122,18 @@ export const id: Dictionary = {
     scoreLine: '【{tier}】 Skor: {score}/{max}',
     changeLine: 'Kalau aku yang melakukannya, apakah jawabanku berubah? → {answer}',
   },
+  easterEggs: {
+    0: '0/80: Semua 40 jawaban Tidak masalah. Zenbu OK, ternyata.',
+    35: '35: Mikopi. Sakura Miko melihatmu.',
+    39: '39: sankyū. Terima kasih sudah bermain.',
+    44: '44: shishi. Sang singa sedang mengamati.',
+    45: '45: Shikopi. Ada yang hafal angka penggemarnya.',
+    53: '53: go-mi. Skor sampah. Pilihan yang berani.',
+    67: '67: roku-nana. Lembar ini tidak berkomentar.',
+    69: '69: nice.',
+    77: '77: jackpot. Angka tujuh keberuntungan ganda.',
+    80: '80/80: tembok sempurna. Tanpa pintu, tanpa jendela.',
+  },
   pdf: {
     subtitle: 'Lembar penilaian 40 pertanyaan: di mana batas Anda?',
     yourResult: 'HASIL ANDA',

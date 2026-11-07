@@ -122,6 +122,18 @@ export const ptBr: Dictionary = {
     scoreLine: '【{tier}】 Pontuação: {score}/{max}',
     changeLine: 'Se eu fosse quem faz isso, minhas respostas mudariam? → {answer}',
   },
+  easterEggs: {
+    0: '0/80: "Totalmente ok" nas 40. Zenbu OK, aparentemente.',
+    35: '35: Mikopi. Sakura Miko está de olho.',
+    39: '39: sankyū. Obrigado por jogar.',
+    44: '44: shishi. O leão está observando.',
+    45: '45: Shikopi. Alguém conhece os números de fã.',
+    53: '53: go-mi. Uma pontuação lixo. Escolha ousada.',
+    67: '67: roku-nana. A folha prefere não comentar.',
+    69: '69: nice.',
+    77: '77: jackpot. Dois setes da sorte em sequência.',
+    80: '80/80: um muro perfeito. Sem portas, sem janelas.',
+  },
   pdf: {
     subtitle: 'A folha de 40 perguntas: onde fica o seu limite?',
     yourResult: 'SEU RESULTADO',

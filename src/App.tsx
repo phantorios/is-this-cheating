@@ -11,6 +11,7 @@ import {
   ImageDown,
   LoaderCircle,
   RotateCcw,
+  Sparkles,
   X,
 } from 'lucide-react'
 import {
@@ -574,6 +575,7 @@ function Results({
   const score = useMemo(() => computeScore(answers), [answers])
   const tierIndex = RESULT_TIERS.indexOf(getTier(score))
   const tier = t.tiers[tierIndex]
+  const egg = t.easterEggs?.[score]
   const [pdfState, setPdfState] = useState<'idle' | 'working' | 'error'>('idle')
   const [jpgError, setJpgError] = useState(false)
 
@@ -633,6 +635,12 @@ function Results({
         >
           {score} <span className="text-xl font-bold text-ink-soft">/ {MAX_SCORE}</span>
         </p>
+        {egg && (
+          <p className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary-soft px-3 py-1.5 text-xs font-bold text-primary-deep">
+            <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+            {egg}
+          </p>
+        )}
       </PaperSheet>
 
       <PaperSheet>

@@ -66,6 +66,11 @@ export interface Dictionary {
     changeLine: Template // "... → {answer}"
   }
   /**
+   * Owner-requested easter eggs: exact score -> hidden line on the results
+   * page. Goroawase and fan-number jokes; localized per language.
+   */
+  easterEggs?: Record<number, string>
+  /**
    * Localized PDF labels. Only provided for languages whose script the core
    * PDF fonts can render (Latin). ja/zh omit it and pdf.ts falls back to en.
    */

@@ -122,6 +122,18 @@ export const nl: Dictionary = {
     scoreLine: '【{tier}】 Score: {score}/{max}',
     changeLine: 'Als ik degene was die dit deed, zouden mijn antwoorden veranderen? → {answer}',
   },
+  easterEggs: {
+    0: '0/80: overal Helemaal prima op alle 40. Zenbu OK, blijkbaar.',
+    35: '35: Mikopi. Sakura Miko kijkt mee.',
+    39: '39: sankyū. Bedankt voor het spelen.',
+    44: '44: shishi. De leeuw kijkt toe.',
+    45: '45: Shikopi. Iemand kent de fannummers.',
+    53: '53: go-mi. Een prutsscore. Een moedige keuze.',
+    67: '67: roku-nana. Het blad geeft geen commentaar.',
+    69: '69: nice.',
+    77: '77: jackpot. Twee gelukszevens op een rij.',
+    80: '80/80: een perfecte muur. Geen deuren, geen ramen.',
+  },
   pdf: {
     subtitle: 'De afvinklijst met 40 vragen: waar ligt jouw grens?',
     yourResult: 'JOUW UITKOMST',

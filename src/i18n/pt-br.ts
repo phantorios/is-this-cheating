@@ -134,6 +134,31 @@ export const ptBr: Dictionary = {
     77: '77: jackpot. Dois setes da sorte em sequência.',
     80: '80/80: um muro perfeito. Sem portas, sem janelas.',
   },
+  faq: {
+    title: 'Sobre este quiz',
+    items: [
+      {
+        q: 'Esta é a folha oficial?',
+        a: 'Não. É uma versão fan não oficial da folha japonesa "これって浮気？判定シート" de Sukoya Kana, com design de Aria e versão web de ikura1. O site dá crédito a eles e adiciona o texto em português.',
+      },
+      {
+        q: 'É grátis?',
+        a: 'Sim. Sem conta, sem anúncios, sem rastreamento. Tudo roda no seu navegador.',
+      },
+      {
+        q: 'Quais idiomas estão disponíveis?',
+        a: 'Inglês, indonésio, japonês, espanhol, português do Brasil, chinês simplificado e holandês. Troque pelos links no rodapé.',
+      },
+      {
+        q: 'Como funciona a pontuação?',
+        a: '"Traição" vale 2, "Não é traição, mas me incomoda" vale 1 e "Totalmente ok" vale 0. O total sobre 80 corresponde a um dos quatro tipos de resultado.',
+      },
+      {
+        q: 'Dá para salvar ou compartilhar meu resultado?',
+        a: 'Sim. Baixe em PDF ou como um cartão JPG de 1200×1200, ou poste no X a partir da página de resultado.',
+      },
+    ],
+  },
   pdf: {
     subtitle: 'A folha de 40 perguntas: onde fica o seu limite?',
     yourResult: 'SEU RESULTADO',

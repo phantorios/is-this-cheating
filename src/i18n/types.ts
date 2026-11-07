@@ -70,6 +70,8 @@ export interface Dictionary {
    * page. Goroawase and fan-number jokes; localized per language.
    */
   easterEggs?: Record<number, string>
+  /** Real visitor questions on the intro page (also mirrored as FAQPage schema on the EN page). */
+  faq: { title: string; items: { q: string; a: string }[] }
   /**
    * Localized PDF labels. Only provided for languages whose script the core
    * PDF fonts can render (Latin). ja/zh omit it and pdf.ts falls back to en.

@@ -76,6 +76,12 @@ all of it to zero.
   webfont costs megabytes for exactly one page; system CJK fonts render cleanly.
 - ja/zh PDFs stay English: jsPDF core fonts cannot render CJK; embedding a CJK
   font is megabytes for one artifact (revisit if asked).
+- FAQ section on the intro (owner request, SEO item): five real questions only
+  (official? free? languages? scoring? sharing?), R-28-compliant, with
+  FAQPage JSON-LD mirrored on the English page. Localized everywhere; only the
+  EN page carries the schema until per-language schema is worth the machinery.
+- Woff2 files are preloaded at build time (five small files, all used on first
+  paint) to remove the CSS-then-font round trip.
 - Question perspective convention (fixed after owner review): every question
   describes an action by YOUR PARTNER (third person), matching the sheet's
   premise and making the final perspective-flip question ("if you were the one

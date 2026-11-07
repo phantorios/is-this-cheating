@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type ComponentType, type ReactNode } from 'react'
 import {
   Check,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   ClipboardList,
@@ -377,6 +378,23 @@ function Intro({ t, onStart, hasSaved }: { t: Dictionary; onStart: () => void; h
         </button>
         {hasSaved && <p className="mt-2 text-xs text-ink-soft">{t.ui.savedNote}</p>}
         <p className="mt-6 font-numeric text-xs text-ink-soft">{t.ui.metaLine}</p>
+      </PaperSheet>
+      <PaperSheet>
+        <h2 className="font-display text-xl text-ink">{t.faq.title}</h2>
+        <div className="mt-2 divide-y divide-stone-100">
+          {t.faq.items.map((item) => (
+            <details key={item.q} className="group py-3">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-bold [&::-webkit-details-marker]:hidden">
+                {item.q}
+                <ChevronDown
+                  className="h-4 w-4 shrink-0 text-ink-soft transition-transform group-open:rotate-180"
+                  aria-hidden="true"
+                />
+              </summary>
+              <p className="mt-2 text-sm leading-relaxed text-ink-soft">{item.a}</p>
+            </details>
+          ))}
+        </div>
       </PaperSheet>
     </main>
   )

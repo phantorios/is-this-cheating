@@ -134,6 +134,31 @@ export const en: Dictionary = {
     77: '77: jackpot. Double lucky sevens.',
     80: '80/80: a perfect wall. No doors, no windows.',
   },
+  faq: {
+    title: 'About this quiz',
+    items: [
+      {
+        q: 'Is this the official sheet?',
+        a: 'No. It is an unofficial fan version of the Japanese "is this cheating?" judgment sheet by Sukoya Kana, with sheet design by Aria and a web version by ikura1. This site credits them and adds the English text.',
+      },
+      {
+        q: 'Is it free?',
+        a: 'Yes. No account, no ads, no tracking. Everything runs in your browser.',
+      },
+      {
+        q: 'Which languages are available?',
+        a: 'English, Bahasa Indonesia, Japanese, Spanish, Brazilian Portuguese, Simplified Chinese and Dutch. Switch from the links in the footer.',
+      },
+      {
+        q: 'How does the scoring work?',
+        a: '"Cheating" scores 2, "Not cheating, but uncomfortable" scores 1 and "Completely OK" scores 0. The total out of 80 maps to one of four result types.',
+      },
+      {
+        q: 'Can I keep or share my result?',
+        a: 'Yes. Download it as a PDF or a 1200×1200 JPG share card, or post it to X from the results page.',
+      },
+    ],
+  },
   pdf: {
     subtitle: 'The 40-question judgment sheet: where do you draw the line?',
     yourResult: 'YOUR RESULT',

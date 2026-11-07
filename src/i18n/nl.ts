@@ -134,6 +134,31 @@ export const nl: Dictionary = {
     77: '77: jackpot. Twee gelukszevens op een rij.',
     80: '80/80: een perfecte muur. Geen deuren, geen ramen.',
   },
+  faq: {
+    title: 'Over deze test',
+    items: [
+      {
+        q: 'Is dit het originele blad?',
+        a: 'Nee. Het is een onofficiële fanversie van het Japanse "これって浮気？判定シート" van Sukoya Kana, met bladontwerp van Aria en een webversie van ikura1. Deze site vermeldt hen en voegt de Nederlandse tekst toe.',
+      },
+      {
+        q: 'Is het gratis?',
+        a: 'Ja. Geen account, geen advertenties, geen tracking. Alles draait in je browser.',
+      },
+      {
+        q: 'In welke talen is het er?',
+        a: 'Engels, Indonesisch, Japans, Spaans, Braziliaans-Portugees, vereenvoudigd Chinees en Nederlands. Wissel via de links in de voettekst.',
+      },
+      {
+        q: 'Hoe werkt de score?',
+        a: '"Vreemdgaan" telt 2, "Geen vreemdgaan, wel ongemakkelijk" telt 1 en "Helemaal prima" telt 0. Het totaal op 80 bepaalt één van de vier uitkomsttypes.',
+      },
+      {
+        q: 'Kan ik mijn uitslag bewaren of delen?',
+        a: 'Ja. Download hem als PDF of als een JPG-deelkaart van 1200×1200, of post hem vanuit de uitslagpagina op X.',
+      },
+    ],
+  },
   pdf: {
     subtitle: 'De afvinklijst met 40 vragen: waar ligt jouw grens?',
     yourResult: 'JOUW UITKOMST',

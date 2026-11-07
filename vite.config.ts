@@ -1,7 +1,7 @@
 import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { LANGS, SITE_URL, pageUrl } from './src/i18n/seo'
 
@@ -46,7 +46,14 @@ function multiLangHtml(): Plugin {
     apply: 'build',
     closeBundle() {
       const dist = join(process.cwd(), 'dist')
-      const template = readFileSync(join(dist, 'index.html'), 'utf8')
+      let template = readFileSync(join(dist, 'index.html'), 'utf8')
+
+      // Preload the self-hosted woff2 files: all five are used on first paint,
+      // and preloading removes the CSS-then-font round trip.
+      const fonts = readdirSync(join(dist, 'assets')).filter((f) => f.endsWith('.woff2'))
+      const preloads = fonts
+        .map((f) => `    <link rel="preload" href="./assets/${f}" as="font" type="font/woff2" crossorigin />`)
+        .join('\n')
 
       const alternates = LANGS.map(
         (l) =>
@@ -56,7 +63,7 @@ function multiLangHtml(): Plugin {
 
       const enPage = template.replace(
         '</head>',
-        `${alternates}\n${xDefault}\n  </head>`,
+        `${preloads}\n${alternates}\n${xDefault}\n  </head>`,
       )
       writeFileSync(join(dist, 'index.html'), enPage)
 

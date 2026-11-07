@@ -134,6 +134,31 @@ export const es: Dictionary = {
     77: '77: jackpot. Dos sietes de la suerte seguidos.',
     80: '80/80: un muro perfecto. Sin puertas ni ventanas.',
   },
+  faq: {
+    title: 'Sobre este test',
+    items: [
+      {
+        q: '¿Es la hoja oficial?',
+        a: 'No. Es una versión fan no oficial de la hoja japonesa "これって浮気？判定シート" de Sukoya Kana, con diseño de Aria y versión web de ikura1. Este sitio les da crédito y añade el texto en español.',
+      },
+      {
+        q: '¿Es gratis?',
+        a: 'Sí. Sin cuentas, sin anuncios, sin rastreo. Todo funciona en tu navegador.',
+      },
+      {
+        q: '¿En qué idiomas está?',
+        a: 'Inglés, indonesio, japonés, español, portugués de Brasil, chino simplificado y neerlandés. Se cambian desde los enlaces del pie de página.',
+      },
+      {
+        q: '¿Cómo se puntúa?',
+        a: '"Infidelidad" suma 2, "No es infidelidad, pero me incomoda" suma 1 y "Totalmente bien" suma 0. El total sobre 80 corresponde a uno de los cuatro tipos de resultado.',
+      },
+      {
+        q: '¿Puedo guardar o compartir mi resultado?',
+        a: 'Sí. Descárgalo como PDF o como tarjeta JPG de 1200×1200, o publícalo en X desde la página de resultados.',
+      },
+    ],
+  },
   pdf: {
     subtitle: 'La hoja de 40 preguntas: ¿dónde está tu límite?',
     yourResult: 'TU RESULTADO',

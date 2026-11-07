@@ -134,6 +134,31 @@ export const id: Dictionary = {
     77: '77: jackpot. Angka tujuh keberuntungan ganda.',
     80: '80/80: tembok sempurna. Tanpa pintu, tanpa jendela.',
   },
+  faq: {
+    title: 'Tentang kuis ini',
+    items: [
+      {
+        q: 'Apakah ini lembar resmi?',
+        a: 'Bukan. Ini versi penggemar tidak resmi dari lembar penilaian Jepang "これって浮気？判定シート" karya Sukoya Kana, desain lembar oleh Aria, versi web oleh ikura1. Situs ini mencantumkan kredit mereka dan menambahkan teks Bahasa Indonesia.',
+      },
+      {
+        q: 'Apakah gratis?',
+        a: 'Ya. Tanpa akun, tanpa iklan, tanpa pelacakan. Semuanya berjalan di browser Anda.',
+      },
+      {
+        q: 'Bahasa apa saja yang tersedia?',
+        a: 'Inggris, Bahasa Indonesia, Jepang, Spanyol, Portugis Brasil, Mandarin Sederhana, dan Belanda. Bisa diganti dari tautan di bagian bawah halaman.',
+      },
+      {
+        q: 'Bagaimana cara penilaiannya?',
+        a: '"Selingkuh" bernilai 2, "Bukan selingkuh, tapi tidak nyaman" bernilai 1, dan "Tidak masalah" bernilai 0. Total dari 80 menentukan salah satu dari empat tipe hasil.',
+      },
+      {
+        q: 'Bisakah saya menyimpan atau membagikan hasilnya?',
+        a: 'Bisa. Unduh sebagai PDF atau kartu berbagi JPG 1200×1200, atau posting ke X dari halaman hasil.',
+      },
+    ],
+  },
   pdf: {
     subtitle: 'Lembar penilaian 40 pertanyaan: di mana batas Anda?',
     yourResult: 'HASIL ANDA',
